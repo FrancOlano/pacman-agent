@@ -270,7 +270,10 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
         scared_timer = my_state.scared_timer
         # If it is scared go to atk mode and try to catch some food
         # Worst case scenario it gets killed and restarts as a regular ghost
-        if scared_timer > 0:
+        # Also, if there are no known invaders, we are in a tie 
+        # or loosing and dont known any enemies go look for food.
+        enemies = [enemy.get_position() for enemy in enemies]
+        if scared_timer > 0 or (num_invaders == 0 and self.get_score(successor) <= 0 and enemies.count(None) and my_state.num_carrying < self.carrying_treshold):
             # Food info
             food_list = self.get_food(successor).as_list()
             food_count = len(food_list)
